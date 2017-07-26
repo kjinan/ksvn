@@ -1,17 +1,14 @@
-package org.ksvn.svnkit.highlevel.demo;
+package org.ksvn.handler;
 
 import org.tmatesoft.svn.core.SVNCancelException;
 import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.wc.ISVNConflictHandler;
 import org.tmatesoft.svn.core.wc.ISVNEventHandler;
-import org.tmatesoft.svn.core.wc.SVNConflictDescription;
-import org.tmatesoft.svn.core.wc.SVNConflictResult;
 import org.tmatesoft.svn.core.wc.SVNEvent;
 import org.tmatesoft.svn.core.wc.SVNStatusType;
 
-public class MergeEventHandler implements ISVNEventHandler,ISVNConflictHandler {
+public class MergeEventHandler implements ISVNEventHandler {
 	public void handleEvent(SVNEvent event, double progress) throws SVNException {
-		System.out.println("called");
+		
 		SVNStatusType contentsStatus = event.getContentsStatus();
 		String pathChangeType = " ";
 		if (contentsStatus == SVNStatusType.STATUS_MODIFIED) {
@@ -36,6 +33,8 @@ public class MergeEventHandler implements ISVNEventHandler,ISVNConflictHandler {
 			pathChangeType = "~";
 		} else if (contentsStatus == SVNStatusType.STATUS_REPLACED) {
 			pathChangeType = "R";
+		} else if (contentsStatus == SVNStatusType.MERGED) {
+			pathChangeType = "merged";
 		} else if (contentsStatus == SVNStatusType.STATUS_NONE || contentsStatus == SVNStatusType.STATUS_NORMAL) {
 			pathChangeType = " ";
 		}
@@ -45,12 +44,5 @@ public class MergeEventHandler implements ISVNEventHandler,ISVNConflictHandler {
 	}
 
 	public void checkCancelled() throws SVNCancelException {
-		System.out.println("checkCancelled");
 	}
-
-	public SVNConflictResult handleConflict(SVNConflictDescription conflictDescription) throws SVNException {
-		System.out.println("handleConflict");
-		return null;
-	}
-
 }
